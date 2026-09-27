@@ -3,21 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>CyberCafe Pro &middot; Ultimate Dashboard v9 Glassmorphic</title>
-  <!-- Stable CDN: PDF.js & jsPDF -->
+  <title>CyberCafe Pro &middot; Ultimate Dashboard v10 Batch & DPI</title>
+  <!-- Stable Libraries: PDF.js, jsPDF, JSZip -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <style>
     :root {
       --bg: #090d16;
-      --surface: rgba(19, 27, 46, 0.75);
-      --surface-card: rgba(15, 23, 42, 0.65);
-      --surface-border: rgba(56, 189, 248, 0.15);
-      --surface-border-hover: rgba(56, 189, 248, 0.45);
+      --surface: rgba(19, 27, 46, 0.78);
+      --surface-card: rgba(15, 23, 42, 0.7);
+      --surface-border: rgba(56, 189, 248, 0.16);
+      --surface-border-hover: rgba(56, 189, 248, 0.5);
       --primary: #2563eb;
       --primary-gradient: linear-gradient(135deg, #2563eb, #6366f1);
       --accent: #38bdf8;
-      --accent-glow: rgba(56, 189, 248, 0.25);
+      --accent-glow: rgba(56, 189, 248, 0.3);
       --success: #10b981;
       --success-gradient: linear-gradient(135deg, #059669, #10b981);
       --text: #f8fafc;
@@ -34,7 +35,7 @@
       background-color: var(--bg);
       background-image: 
         radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.18) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.16) 0px, transparent 50%),
         radial-gradient(at 50% 50%, rgba(14, 165, 233, 0.08) 0px, transparent 60%);
       background-attachment: fixed;
       color: var(--text);
@@ -43,9 +44,8 @@
       flex-direction: column;
       padding-bottom: 24px;
     }
-    /* Modern Glassmorphic Navbar */
     .navbar {
-      background: rgba(15, 23, 42, 0.7);
+      background: rgba(15, 23, 42, 0.75);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--surface-border);
@@ -56,7 +56,7 @@
       position: sticky;
       top: 0;
       z-index: 50;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
     }
     .brand {
       display: flex;
@@ -64,7 +64,6 @@
       gap: 10px;
       font-weight: 800;
       font-size: 16px;
-      letter-spacing: -0.2px;
     }
     .brand-logo {
       background: var(--primary-gradient);
@@ -84,7 +83,6 @@
       border-radius: 999px;
       font-size: 10px;
       font-weight: 700;
-      letter-spacing: 0.5px;
     }
     .btn-gemini {
       background: linear-gradient(135deg, #2563eb, #8b5cf6);
@@ -97,14 +95,12 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+      transition: all 0.2s ease;
     }
     .btn-gemini:hover {
       transform: translateY(-1.5px);
-      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
     }
-    /* Animated Floating Toast */
     .toast {
       position: fixed;
       top: 75px;
@@ -117,7 +113,7 @@
       border-radius: 30px;
       font-size: 13.5px;
       font-weight: 700;
-      box-shadow: 0 12px 35px rgba(0,0,0,0.5), 0 0 20px rgba(16, 185, 129, 0.4);
+      box-shadow: 0 12px 35px rgba(0,0,0,0.5);
       display: none;
       z-index: 1000;
       text-align: center;
@@ -131,7 +127,6 @@
       opacity: 1;
       transform: translateX(-50%) translateY(0) scale(1);
     }
-    /* Tab Switcher Bar */
     .tab-bar {
       display: flex;
       gap: 10px;
@@ -156,10 +151,6 @@
       gap: 8px;
       transition: all 0.2s ease;
     }
-    .tab-btn:hover {
-      color: var(--text);
-      background: rgba(30, 41, 59, 0.8);
-    }
     .tab-btn.active {
       background: var(--surface);
       color: var(--accent);
@@ -175,10 +166,9 @@
       border-radius: 6px;
       border: 1px solid rgba(56, 189, 248, 0.3);
     }
-    /* Main Layout */
     .main-grid {
       display: grid;
-      grid-template-columns: 1fr 1.18fr;
+      grid-template-columns: 1.15fr 1fr;
       gap: 18px;
       padding: 14px 20px;
       max-width: 1440px;
@@ -186,7 +176,7 @@
       width: 100%;
       flex: 1;
     }
-    @media (max-width: 960px) {
+    @media (max-width: 980px) {
       .main-grid {
         grid-template-columns: 1fr;
         padding: 12px;
@@ -195,7 +185,6 @@
     .panel {
       background: var(--surface);
       backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--surface-border);
       border-radius: 16px;
       padding: 18px;
@@ -203,7 +192,6 @@
       flex-direction: column;
       gap: 16px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-      transition: border-color 0.2s;
     }
     .panel-header {
       border-bottom: 1px solid var(--surface-border);
@@ -220,21 +208,19 @@
       align-items: center;
       gap: 9px;
     }
-    /* Modern Drag & Drop Zone */
     .drop-zone {
       border: 2px dashed rgba(56, 189, 248, 0.3);
       border-radius: 12px;
-      padding: 22px 14px;
+      padding: 20px 14px;
       text-align: center;
       cursor: pointer;
       background: rgba(15, 23, 42, 0.5);
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.2s ease;
     }
     .drop-zone:hover {
       border-color: var(--accent);
       background: rgba(37, 99, 235, 0.12);
       transform: translateY(-1.5px);
-      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.15);
     }
     .drop-zone p {
       font-size: 13.5px;
@@ -248,29 +234,34 @@
     input[type="file"] {
       display: none;
     }
-    .file-card {
+    /* Batch File Queue List */
+    .file-queue {
       display: none;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 200px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .file-queue::-webkit-scrollbar { width: 5px; }
+    .file-queue::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    .queue-item {
       background: rgba(11, 15, 25, 0.85);
       border: 1px solid var(--surface-border);
-      border-radius: 10px;
-      padding: 12px 16px;
+      border-radius: 8px;
+      padding: 8px 12px;
+      display: flex;
       justify-content: space-between;
       align-items: center;
-      animation: fadeIn 0.2s ease;
+      font-size: 12px;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .file-name {
+    .queue-name {
       font-weight: 700;
       color: var(--accent);
-      word-break: break-all;
-      font-size: 12.5px;
-    }
-    .file-meta {
-      color: var(--text-muted);
-      font-size: 11px;
+      max-width: 65%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     /* Presets Grid */
     .preset-grid {
@@ -292,7 +283,7 @@
       gap: 3px;
       min-height: 44px;
       justify-content: center;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.2s ease;
     }
     .preset-chip:hover {
       border-color: var(--accent);
@@ -306,7 +297,7 @@
       font-weight: 800;
       box-shadow: 0 0 12px var(--accent-glow);
     }
-    /* Range Box */
+    /* Range & DPI Box */
     .range-box {
       background: rgba(11, 15, 25, 0.85);
       border: 1.5px solid var(--surface-border);
@@ -314,16 +305,15 @@
       padding: 14px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      box-shadow: inset 0 2px 8px rgba(0,0,0,0.3);
+      gap: 12px;
     }
-    .range-inputs-row {
+    .controls-row {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       flex-wrap: wrap;
     }
-    .range-field {
+    .input-field {
       display: flex;
       align-items: center;
       gap: 6px;
@@ -331,24 +321,7 @@
       font-weight: 700;
       color: var(--text-muted);
     }
-    .range-field input {
-      padding: 8px 10px;
-      background: #131b2e;
-      border: 1.5px solid #3b82f6;
-      color: #ffffff;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 800;
-      width: 78px;
-      text-align: center;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .range-field input:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 10px var(--accent-glow);
-    }
-    .unit-select {
+    .input-field input, .input-field select {
       padding: 8px 10px;
       background: #131b2e;
       border: 1.5px solid #3b82f6;
@@ -357,15 +330,6 @@
       font-size: 13.5px;
       font-weight: 800;
     }
-    .range-tagline {
-      font-size: 11.5px;
-      color: var(--accent);
-      line-height: 1.35;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    /* Action Buttons */
     .btn-compress {
       background: var(--primary-gradient);
       color: white;
@@ -377,8 +341,8 @@
       cursor: pointer;
       width: 100%;
       min-height: 46px;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+      transition: all 0.2s ease;
     }
     .btn-compress:hover:not(:disabled) {
       transform: translateY(-1.5px);
@@ -390,8 +354,8 @@
       cursor: not-allowed;
       box-shadow: none;
     }
-    /* Result Card */
-    .result-card {
+    /* Batch Output List */
+    .batch-result-panel {
       display: none;
       background: rgba(16, 185, 129, 0.1);
       border: 1.5px solid rgba(16, 185, 129, 0.4);
@@ -399,47 +363,39 @@
       padding: 14px;
       flex-direction: column;
       gap: 12px;
-      animation: fadeIn 0.25s ease;
     }
-    .result-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
+    .batch-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 220px;
+      overflow-y: auto;
     }
-    .btn-dl, .btn-print {
+    .batch-item {
+      background: rgba(11, 15, 25, 0.85);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 8px;
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+    }
+    .btn-batch-dl-all {
+      background: var(--success-gradient);
       color: white;
-      text-decoration: none;
-      padding: 11px;
+      border: none;
+      padding: 12px;
       border-radius: 9px;
-      font-size: 13.5px;
+      font-size: 14px;
       font-weight: 800;
-      text-align: center;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      min-height: 44px;
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .btn-dl { 
-      background: var(--success-gradient); 
+      gap: 8px;
       box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
     }
-    .btn-dl:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.45);
-    }
-    .btn-print { 
-      background: linear-gradient(135deg, #0284c7, #0ea5e9);
-      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
-    }
-    .btn-print:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 18px rgba(2, 132, 199, 0.45);
-    }
-    /* Prompts List & Micro-animations */
     .prompts-container {
       display: flex;
       flex-direction: column;
@@ -467,16 +423,8 @@
       border-color: var(--accent);
       background: rgba(30, 41, 59, 0.85);
       transform: translateY(-1.5px);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
     }
-    .prompt-row:active {
-      transform: scale(0.985);
-    }
-    .title-line {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+    .title-line { display: flex; align-items: center; gap: 6px; }
     .key-badge {
       background: rgba(30, 41, 59, 0.9);
       color: #38bdf8;
@@ -496,16 +444,8 @@
       border-radius: 5px;
       text-transform: uppercase;
     }
-    .prompt-title {
-      font-size: 13.5px;
-      font-weight: 700;
-      color: var(--text);
-    }
-    .prompt-sub {
-      font-size: 11px;
-      color: var(--text-muted);
-      line-height: 1.3;
-    }
+    .prompt-title { font-size: 13.5px; font-weight: 700; color: var(--text); }
+    .prompt-sub { font-size: 11px; color: var(--text-muted); line-height: 1.3; }
     .btn-copy-touch {
       background: var(--primary-gradient);
       color: #ffffff;
@@ -516,18 +456,7 @@
       font-weight: 700;
       cursor: pointer;
       white-space: nowrap;
-      min-height: 38px;
-      min-width: 62px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-      box-shadow: 0 3px 10px rgba(37, 99, 235, 0.25);
     }
-    .btn-copy-touch:hover {
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
-    }
-    /* Both-Side Dual Merger Section */
     .dual-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -547,11 +476,6 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
-      transition: all 0.2s ease;
-    }
-    .side-box:hover {
-      border-color: var(--accent);
-      background: rgba(37, 99, 235, 0.12);
     }
     .side-box.loaded {
       border-color: var(--success);
@@ -578,7 +502,7 @@
       </svg>
     </div>
     <span>CyberCafe Pro</span>
-    <span class="brand-tag">v9 Guaranteed Range</span>
+    <span class="brand-tag">v10 Batch & DPI</span>
   </div>
   <a href="https://gemini.google.com" target="_blank" class="btn-gemini">
     <span>Open Gemini</span>
@@ -594,7 +518,7 @@
 
 <div class="tab-bar">
   <button class="tab-btn active" id="tabResizerBtn" onclick="switchMode('resizer')">
-    ⚡ Portal Resizer (Strict Range) <span class="tab-badge">Tab / `</span>
+    ⚡ Batch Resizer & DPI Targeter <span class="tab-badge">Tab / `</span>
   </button>
   <button class="tab-btn" id="tabDualBtn" onclick="switchMode('dual')">
     🪪 Both-Side ID Merger (A4 Print) <span class="tab-badge">Tab / `</span>
@@ -602,7 +526,7 @@
 </div>
 
 <main class="main-grid">
-  <!-- LEFT: RESIZER PANEL WITH STRICT RANGE CLAMP -->
+  <!-- LEFT: BATCH RESIZER & DPI ENGINE -->
   <section class="panel" id="resizerPanel">
     <div class="panel-header">
       <div class="panel-title">
@@ -611,80 +535,83 @@
           <polyline points="17 8 12 3 7 8"/>
           <line x1="12" y1="3" x2="12" y2="15"/>
         </svg>
-        Target Portal File Resizer
+        Batch File Resizer & DPI Setter
       </div>
-      <span style="font-size:11px; color:var(--text-muted);">PDF / JPG / PNG</span>
+      <span style="font-size:11px; color:var(--text-muted);">Multiple PDF / Images</span>
     </div>
 
+    <!-- Drop Zone with multi-file support -->
     <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/>
         <path d="M12 12v9"/>
         <path d="m16 16-4-4-4 4"/>
       </svg>
-      <p>Tap or Drop Document / Photo Here</p>
-      <span class="sub">Guaranteed to land strictly between Min and Max</span>
-      <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp,application/pdf">
+      <p>Tap or Drop Single or Multiple Files</p>
+      <span class="sub">JPG, PNG, PDF &middot; Auto-chunks big files without crashing</span>
+      <input type="file" id="fileInput" multiple accept="image/jpeg,image/png,image/webp,application/pdf">
     </div>
 
-    <div class="file-card" id="fileCard">
-      <div>
-        <div class="file-name" id="fileName">file.pdf</div>
-        <div class="file-meta" id="fileSize">Original: 0 KB</div>
-      </div>
-      <button style="background:transparent; border:none; color:#ef4444; cursor:pointer; font-weight:700; font-size:12px; padding:6px;" onclick="resetFile()">Clear</button>
-    </div>
+    <!-- Loaded Queue List -->
+    <div class="file-queue" id="fileQueue"></div>
 
+    <!-- Official Portal Presets -->
     <div>
       <div style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:7px; letter-spacing:0.5px;">Portal Range Presets</div>
       <div class="preset-grid">
-        <div class="preset-chip active" onclick="applyRangePreset(20, 50, 'KB', this)"><strong>20-50 KB</strong><span>SSC Photo</span></div>
-        <div class="preset-chip" onclick="applyRangePreset(10, 20, 'KB', this)"><strong>10-20 KB</strong><span>Sign</span></div>
-        <div class="preset-chip" onclick="applyRangePreset(50, 100, 'KB', this)"><strong>50-100 KB</strong><span>Doc Strict</span></div>
-        <div class="preset-chip" onclick="applyRangePreset(100, 200, 'KB', this)"><strong>100-200 KB</strong><span>Caste/Inc</span></div>
-        <div class="preset-chip" onclick="applyRangePreset(200, 300, 'KB', this)"><strong>200-300 KB</strong><span>Exam Doc</span></div>
-        <div class="preset-chip" onclick="applyRangePreset(250, 500, 'KB', this)"><strong>250-500 KB</strong><span>Marksheet</span></div>
-        <div class="preset-chip" onclick="applyRangePreset(500, 1000, 'KB', this)"><strong>0.5-1 MB</strong><span>Deeds</span></div>
-        <div class="preset-chip" onclick="applyRangePreset(1, 2, 'MB', this)"><strong>1-2 MB</strong><span>Large Scan</span></div>
+        <div class="preset-chip active" onclick="applyRangePreset(20, 50, 'KB', 200, this)"><strong>20-50 KB</strong><span>SSC (200 DPI)</span></div>
+        <div class="preset-chip" onclick="applyRangePreset(10, 20, 'KB', 200, this)"><strong>10-20 KB</strong><span>Sign (200 DPI)</span></div>
+        <div class="preset-chip" onclick="applyRangePreset(50, 100, 'KB', 150, this)"><strong>50-100 KB</strong><span>Portal ID</span></div>
+        <div class="preset-chip" onclick="applyRangePreset(100, 200, 'KB', 150, this)"><strong>100-200 KB</strong><span>Caste/Inc</span></div>
+        <div class="preset-chip" onclick="applyRangePreset(200, 300, 'KB', 200, this)"><strong>200-300 KB</strong><span>Exam Scan</span></div>
+        <div class="preset-chip" onclick="applyRangePreset(250, 500, 'KB', 200, this)"><strong>250-500 KB</strong><span>Marksheet</span></div>
+        <div class="preset-chip" onclick="applyRangePreset(500, 1000, 'KB', 300, this)"><strong>0.5-1 MB</strong><span>Deed (300 DPI)</span></div>
+        <div class="preset-chip" onclick="applyRangePreset(1, 2, 'MB', 300, this)"><strong>1-2 MB</strong><span>Large PDF</span></div>
       </div>
     </div>
 
-    <!-- TARGET RANGE BOX WITH AUTO-PADDING ENFORCEMENT -->
+    <!-- RANGE & DPI SELECTOR -->
     <div class="range-box">
-      <div class="range-inputs-row">
-        <div class="range-field">
-          <label>Min (Floor):</label>
-          <input type="number" id="minTarget" value="20" min="1" step="1">
+      <div class="controls-row">
+        <div class="input-field">
+          <label>Min:</label>
+          <input type="number" id="minTarget" value="20" min="1" style="width: 72px; text-align:center;">
         </div>
-        <span style="color:var(--accent); font-weight:800; font-size:14px;">&rarr;</span>
-        <div class="range-field">
-          <label>Max (Ceiling):</label>
-          <input type="number" id="maxTarget" value="50" min="1" step="1">
+        <span style="color:var(--accent); font-weight:800;">&rarr;</span>
+        <div class="input-field">
+          <label>Max:</label>
+          <input type="number" id="maxTarget" value="50" min="1" style="width: 72px; text-align:center;">
         </div>
-        <select id="targetUnit" class="unit-select">
+        <select id="targetUnit" class="input-field" style="padding:8px 10px;">
           <option value="KB" selected>KB</option>
           <option value="MB">MB</option>
         </select>
+        <div class="input-field">
+          <label>DPI:</label>
+          <select id="dpiSelect">
+            <option value="200" selected>200 DPI (Govt Standard)</option>
+            <option value="300">300 DPI (High Print)</option>
+            <option value="150">150 DPI (Fast Upload)</option>
+            <option value="100">100 DPI (Strict Limit)</option>
+          </select>
+        </div>
       </div>
-      <span class="range-tagline">
-        🛡️ <strong>Range-Lock Active:</strong> Output will be compressed and padded to land safely <em>inside</em> this range. It will never drop below Min.
+      <span style="font-size:11.5px; color:var(--accent);">
+        🛡️ <strong>Guaranteed Range + Header DPI:</strong> Writes JFIF density metadata so portals detect exact DPI, and clamps output strictly inside [Min, Max].
       </span>
     </div>
 
-    <button class="btn-compress" id="processBtn" onclick="processFile()" disabled>
-      Compress Inside Target Range
+    <button class="btn-compress" id="processBtn" onclick="processBatch()" disabled>
+      Compress All Inside Target Range
     </button>
 
-    <div class="result-card" id="resultCard">
-      <div style="font-weight:700; color:#10b981; font-size:13.5px;" id="resStatus">✓ Optimized strictly inside target range!</div>
-      <div style="display:flex; justify-content:space-between; font-size:12.5px; color:#d1fae5;">
-        <span id="resMeta">Pages: -</span>
-        <span id="resFinalSize" style="font-weight:800;">Final: -</span>
-      </div>
-      <div class="result-actions">
-        <a id="downloadBtn" class="btn-dl" download="optimized_file">Download File</a>
-        <button class="btn-print" onclick="printOptimizedFile()">🖨️ Direct Print</button>
-      </div>
+    <!-- Batch Download Panel -->
+    <div class="batch-result-panel" id="batchResultPanel">
+      <div style="font-weight:800; color:#10b981; font-size:13.5px;" id="batchStatus">✓ All files processed!</div>
+      <div class="batch-list" id="batchList"></div>
+      <button class="btn-batch-dl-all" onclick="downloadAllZip()">
+        📦 Download All as ZIP (1-Click)
+      </button>
     </div>
   </section>
 
@@ -706,7 +633,6 @@
     </div>
 
     <div class="dual-grid">
-      <!-- Front Box -->
       <div class="side-box" id="frontBox" onclick="document.getElementById('frontInput').click()">
         <input type="file" id="frontInput" accept="image/*" onchange="loadSide('front', event)">
         <div id="frontPlaceholder">
@@ -717,7 +643,6 @@
         <img id="frontPreview" class="side-img-preview" style="display:none;">
       </div>
 
-      <!-- Back Box -->
       <div class="side-box" id="backBox" onclick="document.getElementById('backInput').click()">
         <input type="file" id="backInput" accept="image/*" onchange="loadSide('back', event)">
         <div id="backPlaceholder">
@@ -733,11 +658,11 @@
       Merge Both Sides onto A4
     </button>
 
-    <div class="result-card" id="dualResultCard">
-      <div style="font-weight:700; color:#10b981; font-size:13.5px;">✓ Both sides merged side-by-side with CR80 Card borders!</div>
-      <div class="result-actions">
-        <a id="dualDownloadBtn" class="btn-dl" download="Merged_ID_Card.jpg">Download Image</a>
-        <button class="btn-print" onclick="printMergedCanvas()">🖨️ Direct Print</button>
+    <div class="batch-result-panel" id="dualResultCard" style="display:none;">
+      <div style="font-weight:800; color:#10b981; font-size:13.5px;">✓ Both sides merged side-by-side with CR80 Card borders!</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <a id="dualDownloadBtn" class="btn-batch-dl-all" style="text-decoration:none;" download="Merged_ID_Card.jpg">Download Image</a>
+        <button class="btn-batch-dl-all" style="background:#0284c7;" onclick="printMergedCanvas()">🖨️ Direct Print</button>
       </div>
     </div>
   </section>
@@ -868,8 +793,8 @@
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
   }
 
-  let currentFile = null;
-  let optimizedUrl = null;
+  let fileQueueList = [];
+  let processedResults = [];
   let frontImgObj = null;
   let backImgObj = null;
   let mergedDataUrl = null;
@@ -882,7 +807,7 @@
       document.getElementById('tabResizerBtn').classList.add('active');
       document.getElementById('resizerPanel').style.display = 'flex';
       document.getElementById('dualPanel').style.display = 'none';
-      triggerToast("Switched to Portal Resizer Mode");
+      triggerToast("Switched to Batch Resizer Mode");
     } else {
       document.getElementById('tabDualBtn').classList.add('active');
       document.getElementById('resizerPanel').style.display = 'none';
@@ -897,49 +822,59 @@
 
   const dropZone = document.getElementById('dropZone');
   const fileInput = document.getElementById('fileInput');
-  const fileCard = document.getElementById('fileCard');
-  const fileName = document.getElementById('fileName');
-  const fileSize = document.getElementById('fileSize');
+  const fileQueue = document.getElementById('fileQueue');
   const processBtn = document.getElementById('processBtn');
-  const resultCard = document.getElementById('resultCard');
+  const batchResultPanel = document.getElementById('batchResultPanel');
+  const batchList = document.getElementById('batchList');
   const minTarget = document.getElementById('minTarget');
   const maxTarget = document.getElementById('maxTarget');
   const targetUnit = document.getElementById('targetUnit');
+  const dpiSelect = document.getElementById('dpiSelect');
 
   dropZone.addEventListener('dragover', (e) => { e.preventDefault(); });
   dropZone.addEventListener('drop', (e) => {
     e.preventDefault();
-    if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+    if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files);
   });
   fileInput.addEventListener('change', (e) => {
-    if (e.target.files.length) handleFile(e.target.files[0]);
+    if (e.target.files.length) handleFiles(e.target.files);
   });
 
-  function handleFile(file) {
-    currentFile = file;
-    fileName.innerText = file.name;
-    const kb = (file.size / 1024).toFixed(1);
-    const mb = (file.size / (1024 * 1024)).toFixed(2);
-    fileSize.innerText = "Original: " + (file.size > 1048576 ? mb + " MB" : kb + " KB");
-    fileCard.style.display = 'flex';
+  function handleFiles(files) {
+    fileQueueList = Array.from(files);
+    renderQueue();
+  }
+
+  function renderQueue() {
+    fileQueue.innerHTML = '';
+    if (fileQueueList.length === 0) {
+      fileQueue.style.display = 'none';
+      processBtn.disabled = true;
+      return;
+    }
+    fileQueue.style.display = 'flex';
     processBtn.disabled = false;
-    resultCard.style.display = 'none';
+    batchResultPanel.style.display = 'none';
+
+    fileQueueList.forEach((f, idx) => {
+      const item = document.createElement('div');
+      item.className = 'queue-item';
+      const sizeStr = f.size > 1048576 ? (f.size / (1024*1024)).toFixed(2) + " MB" : (f.size / 1024).toFixed(1) + " KB";
+      item.innerHTML = `
+        <span class="queue-name">${idx + 1}. ${f.name}</span>
+        <span style="color:var(--text-muted); font-size:11px;">${sizeStr}</span>
+      `;
+      fileQueue.appendChild(item);
+    });
   }
 
-  function resetFile() {
-    currentFile = null;
-    fileInput.value = '';
-    fileCard.style.display = 'none';
-    processBtn.disabled = true;
-    resultCard.style.display = 'none';
-  }
-
-  function applyRangePreset(minVal, maxVal, unit, el) {
+  function applyRangePreset(minVal, maxVal, unit, dpi, el) {
     document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('active'));
     if (el) el.classList.add('active');
     minTarget.value = minVal;
     maxTarget.value = maxVal;
     targetUnit.value = unit;
+    if (dpi) dpiSelect.value = String(dpi);
   }
 
   function getRangeBytes() {
@@ -948,74 +883,147 @@
     const multiplier = targetUnit.value === 'MB' ? 1024 * 1024 : 1024;
     return {
       minBytes: minVal * multiplier,
-      maxBytes: maxVal * multiplier
+      maxBytes: maxVal * multiplier,
+      dpi: parseInt(dpiSelect.value) || 200
     };
   }
 
-  // --- GUARANTEED RANGE ENFORCER ---
-  // If compressed bytes drop below minBytes, append harmless comment metadata padding
-  // to ensure government portal verification tools recognize it inside the required range!
-  function clampToRange(blob, minBytes, maxBytes, type) {
+  // Inject DPI density (JFIF header) & Pad if below minBytes
+  function setDpiAndClampRange(blob, minBytes, maxBytes, dpi, type) {
     return new Promise(async (resolve) => {
-      if (blob.size >= minBytes && blob.size <= maxBytes) {
-        resolve(blob);
-        return;
-      }
-      if (blob.size < minBytes) {
-        const needed = Math.round(minBytes - blob.size + (maxBytes - minBytes) * 0.35);
-        const arrayBuf = await blob.arrayBuffer();
+      const arrayBuf = await blob.arrayBuffer();
+      let bytes = new Uint8Array(arrayBuf);
 
-        if (type === 'jpg' || type === 'jpeg') {
-          // Standard JPEG COM marker (0xFF, 0xFE)
+      if (type === 'jpg' || type === 'jpeg') {
+        // Find or replace JFIF density
+        if (bytes[0] === 0xFF && bytes[1] === 0xD8) {
+          let pos = 2;
+          while (pos < bytes.length - 4) {
+            if (bytes[pos] === 0xFF && bytes[pos + 1] === 0xE0) { // APP0 Marker
+              // bytes[pos+7]..[pos+11] contains units, Xdensity, Ydensity
+              bytes[pos + 7] = 1; // 1 = dots per inch
+              bytes[pos + 8] = (dpi >> 8) & 0xFF;
+              bytes[pos + 9] = dpi & 0xFF;
+              bytes[pos + 10] = (dpi >> 8) & 0xFF;
+              bytes[pos + 11] = dpi & 0xFF;
+              break;
+            }
+            pos++;
+          }
+        }
+
+        // Clamp Range if below minBytes: inject harmless padding comment
+        if (bytes.length < minBytes) {
+          const needed = Math.round(minBytes - bytes.length + (maxBytes - minBytes) * 0.25);
           const padding = new Uint8Array(needed);
-          padding.fill(0x20); // space chars
-          const paddedBlob = new Blob([arrayBuf, new Uint8Array([0xFF, 0xFE]), new Uint8Array([(padding.length >> 8) & 0xFF, padding.length & 0xFF]), padding], { type: 'image/jpeg' });
-          resolve(paddedBlob);
-          return;
-        } else if (type === 'pdf') {
-          // Standard PDF comment padding (% cybercafe padding)
-          const padString = "\n% " + "0".repeat(Math.max(10, needed));
-          const paddedBlob = new Blob([arrayBuf, padString], { type: 'application/pdf' });
+          padding.fill(0x20); // whitespace
+          const paddedBlob = new Blob([bytes, new Uint8Array([0xFF, 0xFE]), new Uint8Array([(padding.length >> 8) & 0xFF, padding.length & 0xFF]), padding], { type: 'image/jpeg' });
           resolve(paddedBlob);
           return;
         }
+        resolve(new Blob([bytes], { type: 'image/jpeg' }));
+        return;
+      } else if (type === 'pdf') {
+        if (bytes.length < minBytes) {
+          const needed = Math.round(minBytes - bytes.length + (maxBytes - minBytes) * 0.25);
+          const padString = "\n% " + "0".repeat(Math.max(10, needed));
+          const paddedBlob = new Blob([bytes, padString], { type: 'application/pdf' });
+          resolve(paddedBlob);
+          return;
+        }
+        resolve(new Blob([bytes], { type: 'application/pdf' }));
+        return;
       }
       resolve(blob);
     });
   }
 
-  async function processFile() {
-    if (!currentFile) return;
-    const { minBytes, maxBytes } = getRangeBytes();
+  // --- BATCH PROCESSOR ---
+  async function processBatch() {
+    if (fileQueueList.length === 0) return;
+    const { minBytes, maxBytes, dpi } = getRangeBytes();
 
     if (minBytes >= maxBytes) {
       alert("Minimum floor must be strictly lower than Maximum ceiling.");
       return;
     }
 
-    processBtn.innerText = "Fitting into " + minTarget.value + " - " + maxTarget.value + " " + targetUnit.value + "...";
+    processBtn.innerText = "Processing batch (0/" + fileQueueList.length + ")...";
     processBtn.disabled = true;
+    processedResults = [];
+    batchList.innerHTML = '';
 
-    try {
-      if (currentFile.type === "application/pdf") {
-        await compressPDFRange(currentFile, minBytes, maxBytes);
-      } else {
-        await compressImageRange(currentFile, minBytes, maxBytes);
+    for (let idx = 0; idx < fileQueueList.length; idx++) {
+      const file = fileQueueList[idx];
+      processBtn.innerText = `Processing (${idx + 1}/${fileQueueList.length}): ${file.name}...`;
+
+      try {
+        let resultBlob = null;
+        if (file.type === "application/pdf") {
+          resultBlob = await compressPDFWorker(file, minBytes, maxBytes, dpi);
+        } else {
+          resultBlob = await compressImageWorker(file, minBytes, maxBytes, dpi);
+        }
+
+        const finalKb = (resultBlob.size / 1024).toFixed(1);
+        const finalMb = (resultBlob.size / (1024 * 1024)).toFixed(2);
+        const displaySize = resultBlob.size > 1048576 ? finalMb + " MB" : finalKb + " KB";
+
+        processedResults.push({
+          name: file.name.replace(/\.[^/.]+$/, "") + "_optimized." + (file.type === "application/pdf" ? "pdf" : "jpg"),
+          blob: resultBlob,
+          sizeStr: displaySize
+        });
+      } catch (err) {
+        console.error("Batch file error:", err);
       }
-    } catch (err) {
-      alert("Notice: " + (err.message || err));
-    } finally {
-      processBtn.innerText = "Compress Inside Target Range";
-      processBtn.disabled = false;
     }
+
+    renderBatchResults();
+    processBtn.innerText = "Compress All Inside Target Range";
+    processBtn.disabled = false;
   }
 
-  // --- RANGE-PRESERVED PDF COMPRESSION ---
-  async function compressPDFRange(file, minBytes, maxBytes) {
+  function renderBatchResults() {
+    batchList.innerHTML = '';
+    processedResults.forEach((res, idx) => {
+      const url = URL.createObjectURL(res.blob);
+      const row = document.createElement('div');
+      row.className = 'batch-item';
+      row.innerHTML = `
+        <span style="font-weight:700; color:var(--text);">${idx + 1}. ${res.name}</span>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-weight:800; color:var(--accent);">${res.sizeStr}</span>
+          <a href="${url}" download="${res.name}" style="background:var(--primary); color:white; padding:4px 9px; border-radius:6px; text-decoration:none; font-size:11px; font-weight:700;">Download</a>
+        </div>
+      `;
+      batchList.appendChild(row);
+    });
+    batchResultPanel.style.display = 'flex';
+    triggerToast("✓ Batch compression complete!");
+  }
+
+  async function downloadAllZip() {
+    if (processedResults.length === 0) return;
+    const zip = new JSZip();
+    processedResults.forEach(res => {
+      zip.file(res.name, res.blob);
+    });
+
+    const zipBlob = await zip.generateAsync({ type: 'blob' });
+    const zipUrl = URL.createObjectURL(zipBlob);
+    const dlLink = document.createElement('a');
+    dlLink.href = zipUrl;
+    dlLink.download = "cybercafe_optimized_files.zip";
+    dlLink.click();
+    triggerToast("📦 Downloaded ZIP containing all files!");
+  }
+
+  // --- MEMORY-SAFE PDF COMPRESSION ---
+  async function compressPDFWorker(file, minBytes, maxBytes, dpi) {
     const ceiling = maxBytes * 0.98;
     if (file.size <= ceiling && file.size >= minBytes) {
-      finishResult(file, "Original Preserved (In Range)", "pdf");
-      return;
+      return file;
     }
 
     const arrayBuffer = await file.arrayBuffer();
@@ -1025,7 +1033,8 @@
     let targetMid = (minBytes + ceiling) * 0.55;
     let ratio = targetMid / file.size;
     let quality = Math.min(0.92, Math.max(0.35, ratio * 0.85));
-    let renderScale = quality < 0.45 ? 1.05 : 1.35;
+    // Memory safeguard for big PDFs: limit viewport scale
+    let renderScale = quality < 0.45 ? 1.0 : 1.25;
 
     const { jsPDF } = window.jspdf;
     let doc = null;
@@ -1049,15 +1058,17 @@
         doc.addPage([viewport.width, viewport.height], orientation);
         doc.addImage(imgData, 'JPEG', 0, 0, viewport.width, viewport.height, '', 'FAST');
       }
+
+      // Memory cleanup for multi-page
+      canvas.width = 0; canvas.height = 0;
     }
 
     let blob = doc.output('blob');
-    blob = await clampToRange(blob, minBytes, ceiling, 'pdf');
-    finishResult(blob, numPages + " Page(s)", "pdf");
+    return await setDpiAndClampRange(blob, minBytes, ceiling, dpi, 'pdf');
   }
 
-  // --- RANGE-PRESERVED IMAGE COMPRESSION ---
-  function compressImageRange(file, minBytes, maxBytes) {
+  // --- MEMORY-SAFE IMAGE COMPRESSION ---
+  function compressImageWorker(file, minBytes, maxBytes, dpi) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onerror = () => reject(new Error("Unable to read image"));
@@ -1069,8 +1080,18 @@
           const ctx = canvas.getContext('2d');
           let w = img.width, h = img.height;
 
-          if (w > 2200) { h = Math.round((h * 2200) / w); w = 2200; }
-          canvas.width = w; canvas.height = h;
+          // Crucial Big-File Safeguard: Cap extreme dimensions to avoid memory crash
+          if (w > 2000 || h > 2000) {
+            if (w > h) {
+              h = Math.round((h * 2000) / w);
+              w = 2000;
+            } else {
+              w = Math.round((w * 2000) / h);
+              h = 2000;
+            }
+          }
+          canvas.width = w;
+          canvas.height = h;
 
           ctx.fillStyle = '#FFFFFF';
           ctx.fillRect(0, 0, w, h);
@@ -1092,17 +1113,19 @@
           }
 
           if (!bestBlob) {
-            canvas.width = Math.round(w * 0.75);
-            canvas.height = Math.round(h * 0.75);
+            canvas.width = Math.round(w * 0.7);
+            canvas.height = Math.round(h * 0.7);
             ctx.fillStyle = '#FFFFFF';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            bestBlob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.6));
+            bestBlob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.55));
           }
 
-          bestBlob = await clampToRange(bestBlob, minBytes, safeCeiling, 'jpg');
-          finishResult(bestBlob, canvas.width + " x " + canvas.height + " px", "jpg");
-          resolve();
+          // Clean canvas memory
+          canvas.width = 0; canvas.height = 0;
+
+          const clampedBlob = await setDpiAndClampRange(bestBlob, minBytes, safeCeiling, dpi, 'jpg');
+          resolve(clampedBlob);
         };
         img.src = e.target.result;
       };
@@ -1110,34 +1133,7 @@
     });
   }
 
-  function finishResult(blob, meta, ext) {
-    const kb = (blob.size / 1024).toFixed(1);
-    const mb = (blob.size / (1024 * 1024)).toFixed(2);
-    const display = blob.size > 1048576 ? mb + " MB" : kb + " KB";
-
-    document.getElementById('resMeta').innerText = "Meta: " + meta;
-    document.getElementById('resFinalSize').innerText = "Final: " + display;
-
-    optimizedUrl = URL.createObjectURL(blob);
-    const dl = document.getElementById('downloadBtn');
-    dl.href = optimizedUrl;
-    dl.download = "optimized_file." + ext;
-    resultCard.style.display = 'flex';
-  }
-
-  function printOptimizedFile() {
-    if (!optimizedUrl) return;
-    const printFrame = document.getElementById('printFrame');
-    printFrame.src = optimizedUrl;
-    printFrame.onload = function() {
-      setTimeout(() => {
-        printFrame.contentWindow.focus();
-        printFrame.contentWindow.print();
-      }, 300);
-    };
-  }
-
-  // --- DUAL SIDE MERGER LOGIC ---
+  // --- DUAL SIDE MERGER ---
   function loadSide(side, event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -1204,7 +1200,7 @@
 
     const dlBtn = document.getElementById('dualDownloadBtn');
     dlBtn.href = mergedDataUrl;
-    document.getElementById('dualResultCard').style.display = 'flex';
+    document.getElementById('dualResultCard').style.display = 'block';
     triggerToast("✓ Merged Front & Back successfully onto A4!");
   }
 
@@ -1289,7 +1285,6 @@
     setTimeout(() => { toast.classList.remove('show'); }, 2200);
   }
 
-  // --- KEYBOARD SHORTCUTS ---
   const keyMap = {
     '1': 'ComboCleanDeskew',
     '2': 'BothSideID',
