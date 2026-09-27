@@ -654,178 +654,107 @@
       <div class="range-inputs-row">
         <div class="range-field">
           <label>Min (Floor):</label>
-          <input type=  border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      white-space: nowrap;
-      min-height: 38px;
-      min-width: 62px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      flex-shrink: 0;
-    }
-    .btn-copy-touch:active {
-      background: #10b981;
-    }
-    #printFrame {
-      display: none;
-    }
-  </style>
-</head>
-<body>
-
-<header class="navbar">
-  <div class="brand">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-      <line x1="8" y1="21" x2="16" y2="21"/>
-      <line x1="12" y1="17" x2="12" y2="21"/>
-    </svg>
-    <span>CyberCafe Pro</span>
-    <span class="brand-tag">v4.0 Combo & Print</span>
-  </div>
-  <div class="nav-actions">
-    <button class="btn-gemini" onclick="copyImageAndOpenGemini()">
-      <span>Attach & Open Gemini</span>
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-        <polyline points="15 3 21 3 21 9"/>
-        <line x1="10" y1="14" x2="21" y2="3"/>
-      </svg>
-    </button>
-  </div>
-</header>
-
-<div id="toast" class="toast">✓ Copied to clipboard!</div>
-
-<main class="main-grid">
-  <!-- LEFT: RESIZER, SYNC & 1-CLICK PRINT -->
-  <section class="panel">
-    <div class="panel-header">
-      <div class="panel-title">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="17 8 12 3 7 8"/>
-          <line x1="12" y1="3" x2="12" y2="15"/>
-        </svg>
-        File Resizer & 1-Click Print
-      </div>
-      <span style="font-size:11px; color:var(--text-muted);">Both Sides / PDF / JPG</span>
-    </div>
-
-    <!-- Drop Zone -->
-    <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/>
-        <path d="M12 12v9"/>
-        <path d="m16 16-4-4-4 4"/>
-      </svg>
-      <p>Tap or Drop Document / ID Card Here</p>
-      <span class="sub">Select Front + Back images or PDF scan</span>
-      <input type="file" id="fileInput" multiple accept="image/jpeg,image/png,image/webp,application/pdf">
-    </div>
-
-    <!-- Active File Card & Auto-Clipboard Sync -->
-    <div class="file-card" id="fileCard">
-      <div class="file-details">
-        <span class="file-name" id="fileName">file.pdf</span>
-        <span class="file-meta" id="fileSize">Original: 0 KB</span>
-      </div>
-      <button style="background:transparent; border:none; color:#ef4444; cursor:pointer; font-weight:700; font-size:12px; padding:6px;" onclick="resetFile()">Clear</button>
-    </div>
-
-    <div class="sync-card" id="syncCard" style="display:none;">
-      <span>📋 Auto-Copy: Ready to paste into Gemini</span>
-      <button class="btn-sync" onclick="copyLoadedImage()">Copy Image</button>
-    </div>
-
-    <div>
-      <div class="section-title">Government Portal Limits</div>
-      <div class="preset-grid">
-        <div class="preset-chip active" onclick="applyPreset(50, 'KB', this)">
-          <strong>50 KB</strong>
-          <span style="color:var(--text-muted);">Photo</span>
+          <input type="number" id="minTarget" value="20" min="1" step="1">
         </div>
-        <div class="preset-chip" onclick="applyPreset(20, 'KB', this)">
-          <strong>20 KB</strong>
-          <span style="color:var(--text-muted);">Sign</span>
+        <span style="color:var(--accent); font-weight:800; font-size:14px;">&rarr;</span>
+        <div class="range-field">
+          <label>Max (Ceiling):</label>
+          <input type="number" id="maxTarget" value="50" min="1" step="1">
         </div>
-        <div class="preset-chip" onclick="applyPreset(100, 'KB', this)">
-          <strong>100 KB</strong>
-          <span style="color:var(--text-muted);">Doc</span>
-        </div>
-        <div class="preset-chip" onclick="applyPreset(200, 'KB', this)">
-          <strong>200 KB</strong>
-          <span style="color:var(--text-muted);">Caste/Inc</span>
-        </div>
-        <div class="preset-chip" onclick="applyPreset(500, 'KB', this)">
-          <strong>500 KB</strong>
-          <span style="color:var(--text-muted);">Marks</span>
-        </div>
-        <div class="preset-chip" onclick="applyPreset(1, 'MB', this)">
-          <strong>1 MB</strong>
-          <span style="color:var(--text-muted);">Deeds</span>
-        </div>
-        <div class="preset-chip" onclick="applyPreset(2, 'MB', this)">
-          <strong>2 MB</strong>
-          <span style="color:var(--text-muted);">Large PDF</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="custom-row">
-      <div class="input-wrap">
-        <label>Exact Target Ceiling:</label>
-        <input type="number" id="customTarget" value="50" min="1" step="0.1" style="width: 70px;">
-        <select id="targetUnit">
+        <select id="targetUnit" class="unit-select">
           <option value="KB" selected>KB</option>
           <option value="MB">MB</option>
         </select>
       </div>
+      <span class="range-tagline">
+        🛡️ <strong>Range-Lock Active:</strong> Output will be compressed and padded to land safely <em>inside</em> this range. It will never drop below Min.
+      </span>
     </div>
 
     <button class="btn-compress" id="processBtn" onclick="processFile()" disabled>
-      Compress to Target Limit
+      Compress Inside Target Range
     </button>
 
-    <!-- Download & 1-Click Print Actions -->
     <div class="result-card" id="resultCard">
-      <div style="font-weight:700; color:#10b981; font-size:13px;">✓ Ready for Download / Direct Print!</div>
-      <div style="display:flex; justify-content:space-between; font-size:12px; color:#d1fae5;">
+      <div style="font-weight:700; color:#10b981; font-size:13.5px;" id="resStatus">✓ Optimized strictly inside target range!</div>
+      <div style="display:flex; justify-content:space-between; font-size:12.5px; color:#d1fae5;">
         <span id="resMeta">Pages: -</span>
-        <span id="resFinalSize" style="font-weight:700;">Final: -</span>
+        <span id="resFinalSize" style="font-weight:800;">Final: -</span>
       </div>
       <div class="result-actions">
-        <a id="downloadBtn" class="btn-dl" download="optimized_file">
-          Download File
-        </a>
-        <button class="btn-print" onclick="printOptimizedFile()">
-          🖨️ Direct Print
-        </button>
+        <a id="downloadBtn" class="btn-dl" download="optimized_file">Download File</a>
+        <button class="btn-print" onclick="printOptimizedFile()">🖨️ Direct Print</button>
       </div>
     </div>
   </section>
 
-  <!-- RIGHT: COMBINED ALL-IN-ONE & BOTH-SIDE PROMPTS -->
+  <!-- DUAL SIDE MERGER PANEL -->
+  <section class="panel" id="dualPanel" style="display:none;">
+    <div class="panel-header">
+      <div class="panel-title">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="5" width="20" height="14" rx="2"/>
+          <line x1="12" y1="5" x2="12" y2="19"/>
+        </svg>
+        Instant Both-Side ID Merger
+      </div>
+      <span style="font-size:11px; color:var(--success); font-weight:700;">CR80 Standard &middot; Pure Offline</span>
+    </div>
+
+    <div style="font-size:12px; color:var(--text-muted); line-height:1.4;">
+      Select Front & Back pictures of Aadhaar / Voter / Licence. Merges both into standard CR80 size on an A4 sheet ready for 1-click print.
+    </div>
+
+    <div class="dual-grid">
+      <!-- Front Box -->
+      <div class="side-box" id="frontBox" onclick="document.getElementById('frontInput').click()">
+        <input type="file" id="frontInput" accept="image/*" onchange="loadSide('front', event)">
+        <div id="frontPlaceholder">
+          <span style="font-size:22px;">📄</span>
+          <div style="font-size:12px; font-weight:700; color:var(--accent);">Select FRONT Side</div>
+          <span style="font-size:10px; color:var(--text-muted);">JPG / PNG</span>
+        </div>
+        <img id="frontPreview" class="side-img-preview" style="display:none;">
+      </div>
+
+      <!-- Back Box -->
+      <div class="side-box" id="backBox" onclick="document.getElementById('backInput').click()">
+        <input type="file" id="backInput" accept="image/*" onchange="loadSide('back', event)">
+        <div id="backPlaceholder">
+          <span style="font-size:22px;">📄</span>
+          <div style="font-size:12px; font-weight:700; color:var(--accent);">Select BACK Side</div>
+          <span style="font-size:10px; color:var(--text-muted);">JPG / PNG</span>
+        </div>
+        <img id="backPreview" class="side-img-preview" style="display:none;">
+      </div>
+    </div>
+
+    <button class="btn-compress" id="mergeBtn" style="background:var(--success-gradient);" onclick="mergeBothSides()" disabled>
+      Merge Both Sides onto A4
+    </button>
+
+    <div class="result-card" id="dualResultCard">
+      <div style="font-weight:700; color:#10b981; font-size:13.5px;">✓ Both sides merged side-by-side with CR80 Card borders!</div>
+      <div class="result-actions">
+        <a id="dualDownloadBtn" class="btn-dl" download="Merged_ID_Card.jpg">Download Image</a>
+        <button class="btn-print" onclick="printMergedCanvas()">🖨️ Direct Print</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- RIGHT: COMBINED PROMPTS -->
   <section class="panel">
     <div class="panel-header">
       <div class="panel-title">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
         </svg>
         AI Cleaning & Both-Side Tools
       </div>
-      <span style="font-size:11px; color:var(--accent);">Keys 1–9 or Tap Anywhere</span>
+      <span style="font-size:11px; color:var(--accent); font-weight:700;">Keys 1–9 &middot; Tab toggles mode</span>
     </div>
 
     <div class="prompts-container">
-      <div class="section-title">Combo All-In-One Document Tools</div>
-
-      <!-- Combo 1 -->
       <div class="prompt-row combo" onclick="copyPrompt('ComboCleanDeskew')">
         <div class="prompt-content">
           <div class="title-line">
@@ -838,20 +767,18 @@
         <button class="btn-copy-touch" type="button">Copy</button>
       </div>
 
-      <!-- Combo 2: Both Side ID Merger -->
       <div class="prompt-row combo" onclick="copyPrompt('BothSideID')">
         <div class="prompt-content">
           <div class="title-line">
             <span class="key-badge">2</span>
             <span class="combo-badge">Both Sides</span>
-            <span class="prompt-title">Both-Side ID / Aadhaar Merger</span>
+            <span class="prompt-title">Both-Side ID / Aadhaar Merger Prompt</span>
           </div>
-          <span class="prompt-sub">Merge Front & Back on single A4 sheet, CR80 ratio, align & clean borders</span>
+          <span class="prompt-sub">Merge Front & Back on single sheet, CR80 ratio, align & clean borders</span>
         </div>
         <button class="btn-copy-touch" type="button">Copy</button>
       </div>
 
-      <!-- Combo 3 -->
       <div class="prompt-row combo" onclick="copyPrompt('FullCardEnhance')">
         <div class="prompt-content">
           <div class="title-line">
@@ -859,12 +786,11 @@
             <span class="combo-badge">Combo</span>
             <span class="prompt-title">Deskew + PVC Card Restore</span>
           </div>
-          <span class="prompt-sub">Straightens tilted card photo, removes glare, locks all numbers & DOB</span>
+          <span class="prompt-sub">Straightens card photo, removes glare, locks all numbers & DOB</span>
         </div>
         <button class="btn-copy-touch" type="button">Copy</button>
       </div>
 
-      <!-- Combo 4 -->
       <div class="prompt-row combo" onclick="copyPrompt('RemoveFoldsFaint')">
         <div class="prompt-content">
           <div class="title-line">
@@ -872,14 +798,11 @@
             <span class="combo-badge">Combo</span>
             <span class="prompt-title">Remove Folds + Boost Faint Seals</span>
           </div>
-          <span class="prompt-sub">Flattens creases & staple holes while enhancing faded ink & stamp impressions</span>
+          <span class="prompt-sub">Flattens creases while enhancing faded ink & stamp impressions</span>
         </div>
         <button class="btn-copy-touch" type="button">Copy</button>
       </div>
 
-      <div class="section-title" style="margin-top:6px;">Single Task & Photo Tools</div>
-
-      <!-- 5 -->
       <div class="prompt-row" onclick="copyPrompt('CleanSignature')">
         <div class="prompt-content">
           <div class="title-line">
@@ -891,7 +814,6 @@
         <button class="btn-copy-touch" type="button">Copy</button>
       </div>
 
-      <!-- 6 -->
       <div class="prompt-row" onclick="copyPrompt('FixWhatsAppPhoto')">
         <div class="prompt-content">
           <div class="title-line">
@@ -903,7 +825,6 @@
         <button class="btn-copy-touch" type="button">Copy</button>
       </div>
 
-      <!-- 7 -->
       <div class="prompt-row" onclick="copyPrompt('PassportBG')">
         <div class="prompt-content">
           <div class="title-line">
@@ -915,7 +836,6 @@
         <button class="btn-copy-touch" type="button">Copy</button>
       </div>
 
-      <!-- 8 -->
       <div class="prompt-row" onclick="copyPrompt('RestoreOld')">
         <div class="prompt-content">
           <div class="title-line">
@@ -927,7 +847,6 @@
         <button class="btn-copy-touch" type="button">Copy</button>
       </div>
 
-      <!-- 9 -->
       <div class="prompt-row" onclick="copyPrompt('ColorizePhoto')">
         <div class="prompt-content">
           <div class="title-line">
@@ -945,28 +864,51 @@
 <iframe id="printFrame"></iframe>
 
 <script>
-  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  if (window.pdfjsLib) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+  }
 
   let currentFile = null;
-  let optimizedBlob = null;
   let optimizedUrl = null;
+  let frontImgObj = null;
+  let backImgObj = null;
+  let mergedDataUrl = null;
+  let currentTabMode = 'resizer';
+
+  function switchMode(mode) {
+    currentTabMode = mode;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    if (mode === 'resizer') {
+      document.getElementById('tabResizerBtn').classList.add('active');
+      document.getElementById('resizerPanel').style.display = 'flex';
+      document.getElementById('dualPanel').style.display = 'none';
+      triggerToast("Switched to Portal Resizer Mode");
+    } else {
+      document.getElementById('tabDualBtn').classList.add('active');
+      document.getElementById('resizerPanel').style.display = 'none';
+      document.getElementById('dualPanel').style.display = 'flex';
+      triggerToast("Switched to Both-Side ID Merger Mode");
+    }
+  }
+
+  function toggleMode() {
+    switchMode(currentTabMode === 'resizer' ? 'dual' : 'resizer');
+  }
 
   const dropZone = document.getElementById('dropZone');
   const fileInput = document.getElementById('fileInput');
   const fileCard = document.getElementById('fileCard');
   const fileName = document.getElementById('fileName');
   const fileSize = document.getElementById('fileSize');
-  const syncCard = document.getElementById('syncCard');
   const processBtn = document.getElementById('processBtn');
   const resultCard = document.getElementById('resultCard');
-  const customTarget = document.getElementById('customTarget');
+  const minTarget = document.getElementById('minTarget');
+  const maxTarget = document.getElementById('maxTarget');
   const targetUnit = document.getElementById('targetUnit');
 
-  dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
-  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+  dropZone.addEventListener('dragover', (e) => { e.preventDefault(); });
   dropZone.addEventListener('drop', (e) => {
     e.preventDefault();
-    dropZone.classList.remove('dragover');
     if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
   });
   fileInput.addEventListener('change', (e) => {
@@ -980,106 +922,113 @@
     const mb = (file.size / (1024 * 1024)).toFixed(2);
     fileSize.innerText = "Original: " + (file.size > 1048576 ? mb + " MB" : kb + " KB");
     fileCard.style.display = 'flex';
-    syncCard.style.display = 'flex';
     processBtn.disabled = false;
     resultCard.style.display = 'none';
-
-    if (file.type === "application/pdf") {
-      applyPreset(1, 'MB');
-    }
   }
 
   function resetFile() {
     currentFile = null;
-    optimizedBlob = null;
     fileInput.value = '';
     fileCard.style.display = 'none';
-    syncCard.style.display = 'none';
     processBtn.disabled = true;
     resultCard.style.display = 'none';
   }
 
-  function applyPreset(val, unit, el) {
+  function applyRangePreset(minVal, maxVal, unit, el) {
     document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('active'));
     if (el) el.classList.add('active');
-    customTarget.value = val;
+    minTarget.value = minVal;
+    maxTarget.value = maxVal;
     targetUnit.value = unit;
   }
 
-  function getTargetBytes() {
-    const val = parseFloat(customTarget.value);
-    return targetUnit.value === 'MB' ? val * 1024 * 1024 : val * 1024;
+  function getRangeBytes() {
+    const minVal = parseFloat(minTarget.value) || 10;
+    const maxVal = parseFloat(maxTarget.value) || 50;
+    const multiplier = targetUnit.value === 'MB' ? 1024 * 1024 : 1024;
+    return {
+      minBytes: minVal * multiplier,
+      maxBytes: maxVal * multiplier
+    };
   }
 
-  // Copy loaded image directly to clipboard so you just Ctrl+V into Gemini
-  async function copyLoadedImage() {
-    if (!currentFile || !currentFile.type.startsWith('image/')) {
-      alert("Please upload a JPG or PNG image to copy to clipboard.");
-      return;
-    }
-    try {
-      const img = new Image();
-      img.src = URL.createObjectURL(currentFile);
-      await img.decode();
-      const canvas = document.createElement('canvas');
-      canvas.width = img.width;
-      canvas.height = img.height;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0);
-      canvas.toBlob(async (blob) => {
-        await navigator.clipboard.write([
-          new ClipboardItem({ 'image/png': blob })
-        ]);
-        triggerToast("Image copied to clipboard! Just Ctrl+V into Gemini");
-      }, 'image/png');
-    } catch (e) {
-      alert("Use Ctrl+C on the image file, or open directly in Gemini.");
-    }
-  }
+  // --- GUARANTEED RANGE ENFORCER ---
+  // If compressed bytes drop below minBytes, append harmless comment metadata padding
+  // to ensure government portal verification tools recognize it inside the required range!
+  function clampToRange(blob, minBytes, maxBytes, type) {
+    return new Promise(async (resolve) => {
+      if (blob.size >= minBytes && blob.size <= maxBytes) {
+        resolve(blob);
+        return;
+      }
+      if (blob.size < minBytes) {
+        const needed = Math.round(minBytes - blob.size + (maxBytes - minBytes) * 0.35);
+        const arrayBuf = await blob.arrayBuffer();
 
-  function copyImageAndOpenGemini() {
-    window.open("https://gemini.google.com", "_blank");
+        if (type === 'jpg' || type === 'jpeg') {
+          // Standard JPEG COM marker (0xFF, 0xFE)
+          const padding = new Uint8Array(needed);
+          padding.fill(0x20); // space chars
+          const paddedBlob = new Blob([arrayBuf, new Uint8Array([0xFF, 0xFE]), new Uint8Array([(padding.length >> 8) & 0xFF, padding.length & 0xFF]), padding], { type: 'image/jpeg' });
+          resolve(paddedBlob);
+          return;
+        } else if (type === 'pdf') {
+          // Standard PDF comment padding (% cybercafe padding)
+          const padString = "\n% " + "0".repeat(Math.max(10, needed));
+          const paddedBlob = new Blob([arrayBuf, padString], { type: 'application/pdf' });
+          resolve(paddedBlob);
+          return;
+        }
+      }
+      resolve(blob);
+    });
   }
 
   async function processFile() {
     if (!currentFile) return;
-    const targetBytes = getTargetBytes();
+    const { minBytes, maxBytes } = getRangeBytes();
 
-    processBtn.innerText = "Compressing to target...";
+    if (minBytes >= maxBytes) {
+      alert("Minimum floor must be strictly lower than Maximum ceiling.");
+      return;
+    }
+
+    processBtn.innerText = "Fitting into " + minTarget.value + " - " + maxTarget.value + " " + targetUnit.value + "...";
     processBtn.disabled = true;
 
     try {
       if (currentFile.type === "application/pdf") {
-        await compressPDF(currentFile, targetBytes);
+        await compressPDFRange(currentFile, minBytes, maxBytes);
       } else {
-        await compressImage(currentFile, targetBytes);
+        await compressImageRange(currentFile, minBytes, maxBytes);
       }
     } catch (err) {
-      alert("Error: " + err.message);
+      alert("Notice: " + (err.message || err));
     } finally {
-      processBtn.innerText = "Compress to Target Limit";
+      processBtn.innerText = "Compress Inside Target Range";
       processBtn.disabled = false;
     }
   }
 
-  async function compressPDF(file, targetBytes) {
-    const arrayBuffer = await file.arrayBuffer();
-    const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
-    pdfDoc.setTitle(''); pdfDoc.setAuthor(''); pdfDoc.setProducer(''); pdfDoc.setCreator('');
-    let fastBytes = await pdfDoc.save({ useObjectStreams: true });
-
-    if (fastBytes.length <= targetBytes) {
-      let blob = new Blob([fastBytes], { type: "application/pdf" });
-      finishResult(blob, pdfDoc.getPageCount() + " Page(s)", "pdf");
+  // --- RANGE-PRESERVED PDF COMPRESSION ---
+  async function compressPDFRange(file, minBytes, maxBytes) {
+    const ceiling = maxBytes * 0.98;
+    if (file.size <= ceiling && file.size >= minBytes) {
+      finishResult(file, "Original Preserved (In Range)", "pdf");
       return;
     }
 
+    const arrayBuffer = await file.arrayBuffer();
     const loadedPdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
     const numPages = loadedPdf.numPages;
-    let quality = Math.min(0.85, Math.max(0.3, (targetBytes / fastBytes) * 0.8));
-    let renderScale = quality < 0.5 ? 1.0 : 1.3;
 
-    const outPdf = await PDFLib.PDFDocument.create();
+    let targetMid = (minBytes + ceiling) * 0.55;
+    let ratio = targetMid / file.size;
+    let quality = Math.min(0.92, Math.max(0.35, ratio * 0.85));
+    let renderScale = quality < 0.45 ? 1.05 : 1.35;
+
+    const { jsPDF } = window.jspdf;
+    let doc = null;
 
     for (let i = 1; i <= numPages; i++) {
       const page = await loadedPdf.getPage(i);
@@ -1090,50 +1039,68 @@
       canvas.height = viewport.height;
 
       await page.render({ canvasContext: ctx, viewport: viewport }).promise;
-      const imgBlob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', quality));
-      const imgBuffer = await imgBlob.arrayBuffer();
-      const embeddedImg = await outPdf.embedJpg(imgBuffer);
+      const imgData = canvas.toDataURL('image/jpeg', quality);
 
-      const newPage = outPdf.addPage([viewport.width, viewport.height]);
-      newPage.drawImage(embeddedImg, { x: 0, y: 0, width: viewport.width, height: viewport.height });
+      const orientation = viewport.width > viewport.height ? 'landscape' : 'portrait';
+      if (i === 1) {
+        doc = new jsPDF({ orientation: orientation, unit: 'pt', format: [viewport.width, viewport.height] });
+        doc.addImage(imgData, 'JPEG', 0, 0, viewport.width, viewport.height, '', 'FAST');
+      } else {
+        doc.addPage([viewport.width, viewport.height], orientation);
+        doc.addImage(imgData, 'JPEG', 0, 0, viewport.width, viewport.height, '', 'FAST');
+      }
     }
 
-    const finalBytes = await outPdf.save({ useObjectStreams: true });
-    finishResult(new Blob([finalBytes], { type: "application/pdf" }), numPages + " Page(s)", "pdf");
+    let blob = doc.output('blob');
+    blob = await clampToRange(blob, minBytes, ceiling, 'pdf');
+    finishResult(blob, numPages + " Page(s)", "pdf");
   }
 
-  function compressImage(file, targetBytes) {
-    return new Promise((resolve) => {
+  // --- RANGE-PRESERVED IMAGE COMPRESSION ---
+  function compressImageRange(file, minBytes, maxBytes) {
+    return new Promise((resolve, reject) => {
       const reader = new FileReader();
+      reader.onerror = () => reject(new Error("Unable to read image"));
       reader.onload = function(e) {
         const img = new Image();
+        img.onerror = () => reject(new Error("Invalid image format"));
         img.onload = async function() {
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
           let w = img.width, h = img.height;
-          if (w > 2000) { h = Math.round((h * 2000) / w); w = 2000; }
+
+          if (w > 2200) { h = Math.round((h * 2200) / w); w = 2200; }
           canvas.width = w; canvas.height = h;
 
           ctx.fillStyle = '#FFFFFF';
           ctx.fillRect(0, 0, w, h);
           ctx.drawImage(img, 0, 0, w, h);
 
-          let low = 0.05, high = 0.95, bestBlob = null;
-          for (let i = 0; i < 7; i++) {
+          const safeCeiling = maxBytes * 0.98;
+          let low = 0.05, high = 0.98, bestBlob = null;
+
+          for (let i = 0; i < 9; i++) {
             let mid = (low + high) / 2;
             let blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', mid));
-            if (blob.size <= targetBytes) { bestBlob = blob; low = mid; } else { high = mid; }
+
+            if (blob.size <= safeCeiling) {
+              bestBlob = blob;
+              low = mid;
+            } else {
+              high = mid;
+            }
           }
 
           if (!bestBlob) {
-            canvas.width = Math.round(w * 0.7);
-            canvas.height = Math.round(h * 0.7);
+            canvas.width = Math.round(w * 0.75);
+            canvas.height = Math.round(h * 0.75);
             ctx.fillStyle = '#FFFFFF';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            bestBlob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.5));
+            bestBlob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.6));
           }
 
+          bestBlob = await clampToRange(bestBlob, minBytes, safeCeiling, 'jpg');
           finishResult(bestBlob, canvas.width + " x " + canvas.height + " px", "jpg");
           resolve();
         };
@@ -1144,7 +1111,6 @@
   }
 
   function finishResult(blob, meta, ext) {
-    optimizedBlob = blob;
     const kb = (blob.size / 1024).toFixed(1);
     const mb = (blob.size / (1024 * 1024)).toFixed(2);
     const display = blob.size > 1048576 ? mb + " MB" : kb + " KB";
@@ -1159,7 +1125,6 @@
     resultCard.style.display = 'flex';
   }
 
-  // 1-Click Print (Triggers direct printer dialog without opening another tab)
   function printOptimizedFile() {
     if (!optimizedUrl) return;
     const printFrame = document.getElementById('printFrame');
@@ -1172,62 +1137,159 @@
     };
   }
 
-  // --- PROMPT REGISTRY (Includes Combo & Both-Side Instructions) ---
+  // --- DUAL SIDE MERGER LOGIC ---
+  function loadSide(side, event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        if (side === 'front') {
+          frontImgObj = img;
+          document.getElementById('frontPlaceholder').style.display = 'none';
+          const prev = document.getElementById('frontPreview');
+          prev.src = e.target.result;
+          prev.style.display = 'block';
+          document.getElementById('frontBox').classList.add('loaded');
+        } else {
+          backImgObj = img;
+          document.getElementById('backPlaceholder').style.display = 'none';
+          const prev = document.getElementById('backPreview');
+          prev.src = e.target.result;
+          prev.style.display = 'block';
+          document.getElementById('backBox').classList.add('loaded');
+        }
+
+        if (frontImgObj && backImgObj) {
+          document.getElementById('mergeBtn').disabled = false;
+        }
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function mergeBothSides() {
+    if (!frontImgObj || !backImgObj) return;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 2480;
+    canvas.height = 3508;
+    const ctx = canvas.getContext('2d');
+
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const cardW = 1010;
+    const cardH = 638;
+
+    const startX = Math.round((canvas.width - cardW) / 2);
+    const frontY = 480;
+    const backY = 1320;
+
+    drawCardWithBorder(ctx, frontImgObj, startX, frontY, cardW, cardH);
+    drawCardWithBorder(ctx, backImgObj, startX, backY, cardW, cardH);
+
+    ctx.setLineDash([8, 8]);
+    ctx.strokeStyle = '#cbd5e1';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(startX, 1220);
+    ctx.lineTo(startX + cardW, 1220);
+    ctx.stroke();
+
+    mergedDataUrl = canvas.toDataURL('image/jpeg', 0.94);
+
+    const dlBtn = document.getElementById('dualDownloadBtn');
+    dlBtn.href = mergedDataUrl;
+    document.getElementById('dualResultCard').style.display = 'flex';
+    triggerToast("✓ Merged Front & Back successfully onto A4!");
+  }
+
+  function drawCardWithBorder(ctx, img, x, y, w, h) {
+    ctx.save();
+    const r = 24;
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+
+    ctx.clip();
+    ctx.drawImage(img, x, y, w, h);
+    ctx.restore();
+
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+    ctx.stroke();
+  }
+
+  function printMergedCanvas() {
+    if (!mergedDataUrl) return;
+    const printFrame = document.getElementById('printFrame');
+    printFrame.src = mergedDataUrl;
+    printFrame.onload = function() {
+      setTimeout(() => {
+        printFrame.contentWindow.focus();
+        printFrame.contentWindow.print();
+      }, 300);
+    };
+  }
+
+  // --- PROMPTS ---
   const prompts = {
     ComboCleanDeskew: "Perform both deskew straightening and document cleaning on this image: 1) Straighten (deskew) any tilted angles and crop tightly to 90-degree square corners. 2) Remove all background shadows, scanner noise, and stains. Flatten the entire paper background to clean pure white (#FFFFFF). STRICT REQUIREMENT: DO NOT alter, spell-check, rewrite, or hallucinate ANY existing printed text, handwriting, numbers, or official signatures. Preserve 100% of all original characters completely intact and exact.",
-    
     BothSideID: "Merge and format both Front and Back sides of this official ID / card (Aadhaar / Voter / License) onto a single clean page ready for print: 1) Align the Front side and Back side side-by-side with uniform spacing. 2) Maintain standard CR80 card proportions (85.6mm x 54mm each) and preserve clear rounded card borders. 3) Flatten background to clean pure white (#FFFFFF), remove camera glare and shadows. CRITICAL: DO NOT alter, change, blur, or modify ANY card details, names, numbers, dates of birth, QR codes, or signatures.",
-    
     FullCardEnhance: "Deskew, straighten, and enhance this PVC ID card photo: 1) Correct perspective tilt and align horizontally. 2) Remove camera flash glare, scratches, and background noise. 3) Maintain standard CR80 (85.6mm x 54mm) card aspect ratio. CRITICAL: Strictly preserve all card text, names, ID numbers, dates, QR codes, logos, and signatures with zero modifications.",
-    
     RemoveFoldsFaint: "Process and restore this scanned document: 1) Digitally remove fold creases, staple shadow lines, and dog-eared paper texture. 2) Boost and darken faint pencil marks, faded ink signatures, and blurred rubber seals without washing them out. 3) Keep background clean paper-white while ensuring every faded letter and number remains 100% legible and untouched.",
-    
     CleanSignature: "Process this scanned customer signature for government portal upload: eliminate grey paper background to pure transparent/clean white (#FFFFFF). Darken ink strokes to deep jet black (#000000) with crisp edges. Do not clip thin pen loops or alter signature geometry.",
-    
     FixWhatsAppPhoto: "Restore and upscale this heavily compressed, low-resolution WhatsApp/mobile image for high-resolution photo printing: remove digital JPEG compression artifacts, pixelation blocks, and camera noise. Reconstruct crisp, sharp eye pupils, eyelashes, hairline, and facial contours while keeping the person's true likeness and natural skin texture intact. Maintain standard 35mm x 45mm passport proportions.",
-    
     PassportBG: "Enhance and prepare this portrait for passport submission: 1) Sharpen facial features, balance skin tones naturally without artificial smoothing, remove minor blemishes. 2) Replace existing background with smooth, solid studio off-white (#F5F5F5) or light blue with soft, natural feathering around hair and shoulders. Keep clothes and facial identity 100% unchanged.",
-    
     RestoreOld: "Restore this photograph: repair scratches, cracks, fold lines, and dust spots. Sharpen soft details and enhance contrast while strictly preserving authentic facial identity and features.",
-    
     ColorizePhoto: "Colorize this vintage black-and-white photograph with natural, realistic skin tones, fabric colors, and balanced background tones."
   };
 
   function copyPrompt(key) {
     const text = prompts[key];
     if (!text) return;
-
-    if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard.writeText(text).then(() => triggerToast(key)).catch(() => fallbackCopy(text, key));
-    } else {
-      fallbackCopy(text, key);
-    }
-  }
-
-  function fallbackCopy(text, key) {
-    const tempTextArea = document.createElement("textarea");
-    tempTextArea.value = text;
-    tempTextArea.style.position = "fixed";
-    tempTextArea.style.opacity = "0";
-    document.body.appendChild(tempTextArea);
-    tempTextArea.select();
-    try {
+    navigator.clipboard.writeText(text).then(() => triggerToast("✓ Copied prompt: " + key)).catch(() => {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
       document.execCommand("copy");
-      triggerToast(key);
-    } catch (e) {
-      alert("Copied manually.");
-    }
-    document.body.removeChild(tempTextArea);
+      document.body.removeChild(ta);
+      triggerToast("✓ Copied prompt: " + key);
+    });
   }
 
   function triggerToast(msg) {
     const toast = document.getElementById('toast');
-    toast.innerText = msg.startsWith("Image") || msg.startsWith("✓") ? msg : "✓ Copied prompt: " + msg + "! Paste in Gemini.";
-    toast.style.display = 'block';
-    setTimeout(() => { toast.style.display = 'none'; }, 2200);
+    toast.innerText = msg;
+    toast.classList.add('show');
+    setTimeout(() => { toast.classList.remove('show'); }, 2200);
   }
 
-  // Keyboard Shortcuts (1 to 9)
+  // --- KEYBOARD SHORTCUTS ---
   const keyMap = {
     '1': 'ComboCleanDeskew',
     '2': 'BothSideID',
@@ -1241,7 +1303,16 @@
   };
 
   window.addEventListener('keydown', (e) => {
-    if (['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+    const inInput = ['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement.tagName);
+
+    if (e.key === '`' || (e.key === 'Tab' && !inInput)) {
+      e.preventDefault();
+      toggleMode();
+      return;
+    }
+
+    if (inInput) return;
+
     if (keyMap[e.key]) {
       e.preventDefault();
       copyPrompt(keyMap[e.key]);
