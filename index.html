@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CyberCafe Pro &middot; Ultimate Counter Dashboard</title>
+  <!-- Client-side PDF compression engines -->
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.9/dist/pdf-lib.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --surface: #131b2e;
+      --surface-border: #23304a;
+      --surface-hover: #1e2c47;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --accent: #38bdf8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --text: #f9fafb;
+      --text-muted: #94a3b8;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 24px;
+    }
+    /* Top Navbar */
+    .navbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--surface-border);
+      padding: 12px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .brand-tag {
+      background: rgba(37, 99, 235, 0.25);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-gemini {
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: white;
+      text-decoration: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 38px;
+      border: none;
+      cursor: pointer;
+    }
+    /* Big Toast Notification */
+    .toast {
+      position: fixed;
+      top: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #059669;
+      color: white;
+      padding: 12px 22px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      display: none;
+      z-index: 1000;
+      text-align: center;
+      max-width: 90vw;
+      border: 1px solid #34d399;
+    }
+    /* Main Layout */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 16px;
+      padding: 14px 18px;
+      max-width: 1440px;
+      margin: 0 auto;
+      width: 100%;
+      flex: 1;
+    }
+    @media (max-width: 940px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+        padding: 12px;
+        gap: 14px;
+      }
+    }
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .panel-header {
+      border-bottom: 1px solid var(--surface-border);
+      padding-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .panel-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    /* Upload / Dropzone */
+    .drop-zone {
+      border: 2px dashed #3b4d6b;
+      border-radius: 10px;
+      padding: 18px 12px;
+      text-align: center;
+      cursor: pointer;
+      background: rgba(11, 15, 25, 0.5);
+      transition: all 0.2s;
+    }
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: var(--accent);
+      background: rgba(37, 99, 235, 0.15);
+    }
+    .drop-zone p {
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+    .drop-zone span.sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    input[type="file"] {
+      display: none;
+    }
+    /* Auto-Sync Banner */
+    .sync-card {
+      background: rgba(37, 99, 235, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+    }
+    .btn-sync {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .file-card {
+      display: none;
+      background: #0b0f19;
+      border: 1px solid var(--surface-border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .file-details {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      font-size: 12px;
+    }
+    .file-name {
+      font-weight: 700;
+      color: var(--accent);
+      word-break: break-all;
+    }
+    .file-meta {
+      color: var(--text-muted);
+      font-size: 11px;
+    }
+    /* Presets */
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .preset-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
+      gap: 6px;
+    }
+    .preset-chip {
+      background: #0b0f19;
+      border: 1px solid var(--surface-border);
+      border-radius: 8px;
+      padding: 8px 6px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 11px;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-height: 44px;
+      justify-content: center;
+    }
+    .preset-chip.active {
+      border-color: var(--accent);
+      background: rgba(37, 99, 235, 0.25);
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .custom-row {
+      background: #0b0f19;
+      border: 1px solid var(--surface-border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .input-wrap input, .input-wrap select {
+      padding: 7px 10px;
+      background: #1a243a;
+      border: 1px solid #334466;
+      color: #ffffff;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .btn-compress {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      min-height: 44px;
+    }
+    .btn-compress:disabled {
+      background: #243048;
+      color: #64748b;
+      cursor: not-allowed;
+    }
+    .result-card {
+      display: none;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      border-radius: 8px;
+      padding: 12px;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .result-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .btn-dl, .btn-print {
+      color: white;
+      text-decoration: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 42px;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-dl { background: var(--success); }
+    .btn-print { background: #0284c7; }
+    /* Prompts List */
+    .prompts-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .prompt-row {
+      background: #0b0f19;
+      border: 1px solid var(--surface-border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      min-height: 56px;
+      user-select: none;
+      transition: all 0.15s ease;
+    }
+    .prompt-row.combo {
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      background: rgba(30, 41, 59, 0.7);
+    }
+    .prompt-row:hover {
+      border-color: var(--accent);
+      background: var(--surface-hover);
+    }
+    .prompt-row:active {
+      transform: scale(0.98);
+    }
+    .prompt-content {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+    }
+    .title-line {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .key-badge {
+      background: #1e293b;
+      color: #38bdf8;
+      border: 1px solid #334155;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 5px;
+      border-radius: 4px;
+    }
+    .combo-badge {
+      background: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      font-size: 9px;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .prompt-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .prompt-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.25;
+    }
+    .btn-copy-touch {
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      min-height: 38px;
+      min-width: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .btn-copy-touch:active {
+      background: #10b981;
+    }
+    #printFrame {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<header class="navbar">
+  <div class="brand">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+      <line x1="8" y1="21" x2="16" y2="21"/>
+      <line x1="12" y1="17" x2="12" y2="21"/>
+    </svg>
+    <span>CyberCafe Pro</span>
+    <span class="brand-tag">v4.0 Combo & Print</span>
+  </div>
+  <div class="nav-actions">
+    <button class="btn-gemini" onclick="copyImageAndOpenGemini()">
+      <span>Attach & Open Gemini</span>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+        <polyline points="15 3 21 3 21 9"/>
+        <line x1="10" y1="14" x2="21" y2="3"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<div id="toast" class="toast">✓ Copied to clipboard!</div>
+
+<main class="main-grid">
+  <!-- LEFT: RESIZER, SYNC & 1-CLICK PRINT -->
+  <section class="panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        File Resizer & 1-Click Print
+      </div>
+      <span style="font-size:11px; color:var(--text-muted);">Both Sides / PDF / JPG</span>
+    </div>
+
+    <!-- Drop Zone -->
+    <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/>
+        <path d="M12 12v9"/>
+        <path d="m16 16-4-4-4 4"/>
+      </svg>
+      <p>Tap or Drop Document / ID Card Here</p>
+      <span class="sub">Select Front + Back images or PDF scan</span>
+      <input type="file" id="fileInput" multiple accept="image/jpeg,image/png,image/webp,application/pdf">
+    </div>
+
+    <!-- Active File Card & Auto-Clipboard Sync -->
+    <div class="file-card" id="fileCard">
+      <div class="file-details">
+        <span class="file-name" id="fileName">file.pdf</span>
+        <span class="file-meta" id="fileSize">Original: 0 KB</span>
+      </div>
+      <button style="background:transparent; border:none; color:#ef4444; cursor:pointer; font-weight:700; font-size:12px; padding:6px;" onclick="resetFile()">Clear</button>
+    </div>
+
+    <div class="sync-card" id="syncCard" style="display:none;">
+      <span>📋 Auto-Copy: Ready to paste into Gemini</span>
+      <button class="btn-sync" onclick="copyLoadedImage()">Copy Image</button>
+    </div>
+
+    <div>
+      <div class="section-title">Government Portal Limits</div>
+      <div class="preset-grid">
+        <div class="preset-chip active" onclick="applyPreset(50, 'KB', this)">
+          <strong>50 KB</strong>
+          <span style="color:var(--text-muted);">Photo</span>
+        </div>
+        <div class="preset-chip" onclick="applyPreset(20, 'KB', this)">
+          <strong>20 KB</strong>
+          <span style="color:var(--text-muted);">Sign</span>
+        </div>
+        <div class="preset-chip" onclick="applyPreset(100, 'KB', this)">
+          <strong>100 KB</strong>
+          <span style="color:var(--text-muted);">Doc</span>
+        </div>
+        <div class="preset-chip" onclick="applyPreset(200, 'KB', this)">
+          <strong>200 KB</strong>
+          <span style="color:var(--text-muted);">Caste/Inc</span>
+        </div>
+        <div class="preset-chip" onclick="applyPreset(500, 'KB', this)">
+          <strong>500 KB</strong>
+          <span style="color:var(--text-muted);">Marks</span>
+        </div>
+        <div class="preset-chip" onclick="applyPreset(1, 'MB', this)">
+          <strong>1 MB</strong>
+          <span style="color:var(--text-muted);">Deeds</span>
+        </div>
+        <div class="preset-chip" onclick="applyPreset(2, 'MB', this)">
+          <strong>2 MB</strong>
+          <span style="color:var(--text-muted);">Large PDF</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="custom-row">
+      <div class="input-wrap">
+        <label>Exact Target Ceiling:</label>
+        <input type="number" id="customTarget" value="50" min="1" step="0.1" style="width: 70px;">
+        <select id="targetUnit">
+          <option value="KB" selected>KB</option>
+          <option value="MB">MB</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn-compress" id="processBtn" onclick="processFile()" disabled>
+      Compress to Target Limit
+    </button>
+
+    <!-- Download & 1-Click Print Actions -->
+    <div class="result-card" id="resultCard">
+      <div style="font-weight:700; color:#10b981; font-size:13px;">✓ Ready for Download / Direct Print!</div>
+      <div style="display:flex; justify-content:space-between; font-size:12px; color:#d1fae5;">
+        <span id="resMeta">Pages: -</span>
+        <span id="resFinalSize" style="font-weight:700;">Final: -</span>
+      </div>
+      <div class="result-actions">
+        <a id="downloadBtn" class="btn-dl" download="optimized_file">
+          Download File
+        </a>
+        <button class="btn-print" onclick="printOptimizedFile()">
+          🖨️ Direct Print
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- RIGHT: COMBINED ALL-IN-ONE & BOTH-SIDE PROMPTS -->
+  <section class="panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+        </svg>
+        AI Cleaning & Both-Side Tools
+      </div>
+      <span style="font-size:11px; color:var(--accent);">Keys 1–9 or Tap Anywhere</span>
+    </div>
+
+    <div class="prompts-container">
+      <div class="section-title">Combo All-In-One Document Tools</div>
+
+      <!-- Combo 1 -->
+      <div class="prompt-row combo" onclick="copyPrompt('ComboCleanDeskew')">
+        <div class="prompt-content">
+          <div class="title-line">
+            <span class="key-badge">1</span>
+            <span class="combo-badge">Combo</span>
+            <span class="prompt-title">Deskew + Full Document Clean</span>
+          </div>
+          <span class="prompt-sub">Straightens tilted angle, flattens to pure white (#FFFFFF), zero text edit</span>
+        </div>
+        <button class="btn-copy-touch" type="button">Copy</button>
+      </div>
+
+      <!-- Combo 2: Both Side ID Merger -->
+      <div class="prompt-row combo" onclick="copyPrompt('BothSideID')">
+        <div class="prompt-content">
+          <div class="title-line">
+            <span class="key-badge">2</span>
+            <span class="combo-badge">Both Sides</span>
+            <span class="prompt-title">Both-Side ID / Aadhaar Merger</span>
+          </div>
+          <span class="prompt-sub">Merge Front & Back on single A4 sheet, CR80 ratio, align & clean borders</span>
+        </div>
+        <button class="btn-copy-touch" type="button">Copy</button>
+      </div>
+
+      <!-- Combo 3 -->
+      <div class="prompt-row combo" onclick="copyPrompt('FullCardEnhance')">
+        <div class="prompt-content">
+          <div class="title-line">
+            <span class="key-badge">3</span>
+            <span class="combo-badge">Combo</span>
+            <span class="prompt-title">Deskew + PVC Card Restore</span>
+          </div>
+          <span class="prompt-sub">Straightens tilted card photo, removes glare, locks all numbers & DOB</span>
+        </div>
+        <button class="btn-copy-touch" type="button">Copy</button>
+      </div>
+
+      <!-- Combo 4 -->
+      <div class="prompt-row combo" onclick="copyPrompt('RemoveFoldsFaint')">
+        <div class="prompt-content">
+          <div class="title-line">
+            <span class="key-badge">4</span>
+            <span class="combo-badge">Combo</span>
+            <span class="prompt-title">Remove Folds + Boost Faint Seals</span>
+          </div>
+          <span class="prompt-sub">Flattens creases & staple holes while enhancing faded ink & stamp impressions</span>
+        </div>
+        <button class="btn-copy-touch" type="button">Copy</button>
+      </div>
+
+      <div class="section-title" style="margin-top:6px;">Single Task & Photo Tools</div>
+
+      <!-- 5 -->
+      <div class="prompt-row" onclick="copyPrompt('CleanSignature')">
+        <div class="prompt-content">
+          <div class="title-line">
+            <span class="key-badge">5</span>
+            <span class="prompt-title">Signature Isolate (Deep Black)</span>
+          </div>
+          <span class="prompt-sub">Extracts signature to jet black on pure white for online portals</span>
+        </div>
+        <button class="btn-copy-touch" type="button">Copy</button>
+      </div>
+
+      <!-- 6 -->
+      <div class="prompt-row" onclick="copyPrompt('FixWhatsAppPhoto')">
+        <div class="prompt-content">
+          <div class="title-line">
+            <span class="key-badge">6</span>
+            <span class="prompt-title">Fix Low-Res WhatsApp Photo</span>
+          </div>
+          <span class="prompt-sub">De-noise, upscale, sharp iris & hair for 35x45mm passport print</span>
+        </div>
+        <button class="btn-copy-touch" type="button">Copy</button>
+      </div>
+
+      <!-- 7 -->
+      <div class="prompt-row" onclick="copyPrompt('PassportBG')">
+        <div class="prompt-content">
+          <div class="title-line">
+            <span class="key-badge">7</span>
+            <span class="prompt-title">Passport Retouch + BG Swap</span>
+          </div>
+          <span class="prompt-sub">Face polish, removes blemishes, replaces background with studio white/blue</span>
+        </div>
+        <button class="btn-copy-touch" type="button">Copy</button>
+      </div>
+
+      <!-- 8 -->
+      <div class="prompt-row" onclick="copyPrompt('RestoreOld')">
+        <div class="prompt-content">
+          <div class="title-line">
+            <span class="key-badge">8</span>
+            <span class="prompt-title">Restore Torn / Old Photo</span>
+          </div>
+          <span class="prompt-sub">Repairs scratches, cracks & stains while locking authentic facial features</span>
+        </div>
+        <button class="btn-copy-touch" type="button">Copy</button>
+      </div>
+
+      <!-- 9 -->
+      <div class="prompt-row" onclick="copyPrompt('ColorizePhoto')">
+        <div class="prompt-content">
+          <div class="title-line">
+            <span class="key-badge">9</span>
+            <span class="prompt-title">Colorize Vintage B&W Photo</span>
+          </div>
+          <span class="prompt-sub">Natural skin tones, clothing & balanced environmental colors</span>
+        </div>
+        <button class="btn-copy-touch" type="button">Copy</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<iframe id="printFrame"></iframe>
+
+<script>
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  let currentFile = null;
+  let optimizedBlob = null;
+  let optimizedUrl = null;
+
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+  const fileCard = document.getElementById('fileCard');
+  const fileName = document.getElementById('fileName');
+  const fileSize = document.getElementById('fileSize');
+  const syncCard = document.getElementById('syncCard');
+  const processBtn = document.getElementById('processBtn');
+  const resultCard = document.getElementById('resultCard');
+  const customTarget = document.getElementById('customTarget');
+  const targetUnit = document.getElementById('targetUnit');
+
+  dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', (e) => {
+    if (e.target.files.length) handleFile(e.target.files[0]);
+  });
+
+  function handleFile(file) {
+    currentFile = file;
+    fileName.innerText = file.name;
+    const kb = (file.size / 1024).toFixed(1);
+    const mb = (file.size / (1024 * 1024)).toFixed(2);
+    fileSize.innerText = "Original: " + (file.size > 1048576 ? mb + " MB" : kb + " KB");
+    fileCard.style.display = 'flex';
+    syncCard.style.display = 'flex';
+    processBtn.disabled = false;
+    resultCard.style.display = 'none';
+
+    if (file.type === "application/pdf") {
+      applyPreset(1, 'MB');
+    }
+  }
+
+  function resetFile() {
+    currentFile = null;
+    optimizedBlob = null;
+    fileInput.value = '';
+    fileCard.style.display = 'none';
+    syncCard.style.display = 'none';
+    processBtn.disabled = true;
+    resultCard.style.display = 'none';
+  }
+
+  function applyPreset(val, unit, el) {
+    document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('active'));
+    if (el) el.classList.add('active');
+    customTarget.value = val;
+    targetUnit.value = unit;
+  }
+
+  function getTargetBytes() {
+    const val = parseFloat(customTarget.value);
+    return targetUnit.value === 'MB' ? val * 1024 * 1024 : val * 1024;
+  }
+
+  // Copy loaded image directly to clipboard so you just Ctrl+V into Gemini
+  async function copyLoadedImage() {
+    if (!currentFile || !currentFile.type.startsWith('image/')) {
+      alert("Please upload a JPG or PNG image to copy to clipboard.");
+      return;
+    }
+    try {
+      const img = new Image();
+      img.src = URL.createObjectURL(currentFile);
+      await img.decode();
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      canvas.toBlob(async (blob) => {
+        await navigator.clipboard.write([
+          new ClipboardItem({ 'image/png': blob })
+        ]);
+        triggerToast("Image copied to clipboard! Just Ctrl+V into Gemini");
+      }, 'image/png');
+    } catch (e) {
+      alert("Use Ctrl+C on the image file, or open directly in Gemini.");
+    }
+  }
+
+  function copyImageAndOpenGemini() {
+    window.open("https://gemini.google.com", "_blank");
+  }
+
+  async function processFile() {
+    if (!currentFile) return;
+    const targetBytes = getTargetBytes();
+
+    processBtn.innerText = "Compressing to target...";
+    processBtn.disabled = true;
+
+    try {
+      if (currentFile.type === "application/pdf") {
+        await compressPDF(currentFile, targetBytes);
+      } else {
+        await compressImage(currentFile, targetBytes);
+      }
+    } catch (err) {
+      alert("Error: " + err.message);
+    } finally {
+      processBtn.innerText = "Compress to Target Limit";
+      processBtn.disabled = false;
+    }
+  }
+
+  async function compressPDF(file, targetBytes) {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
+    pdfDoc.setTitle(''); pdfDoc.setAuthor(''); pdfDoc.setProducer(''); pdfDoc.setCreator('');
+    let fastBytes = await pdfDoc.save({ useObjectStreams: true });
+
+    if (fastBytes.length <= targetBytes) {
+      let blob = new Blob([fastBytes], { type: "application/pdf" });
+      finishResult(blob, pdfDoc.getPageCount() + " Page(s)", "pdf");
+      return;
+    }
+
+    const loadedPdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    const numPages = loadedPdf.numPages;
+    let quality = Math.min(0.85, Math.max(0.3, (targetBytes / fastBytes) * 0.8));
+    let renderScale = quality < 0.5 ? 1.0 : 1.3;
+
+    const outPdf = await PDFLib.PDFDocument.create();
+
+    for (let i = 1; i <= numPages; i++) {
+      const page = await loadedPdf.getPage(i);
+      const viewport = page.getViewport({ scale: renderScale });
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+
+      await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+      const imgBlob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', quality));
+      const imgBuffer = await imgBlob.arrayBuffer();
+      const embeddedImg = await outPdf.embedJpg(imgBuffer);
+
+      const newPage = outPdf.addPage([viewport.width, viewport.height]);
+      newPage.drawImage(embeddedImg, { x: 0, y: 0, width: viewport.width, height: viewport.height });
+    }
+
+    const finalBytes = await outPdf.save({ useObjectStreams: true });
+    finishResult(new Blob([finalBytes], { type: "application/pdf" }), numPages + " Page(s)", "pdf");
+  }
+
+  function compressImage(file, targetBytes) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = async function() {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          let w = img.width, h = img.height;
+          if (w > 2000) { h = Math.round((h * 2000) / w); w = 2000; }
+          canvas.width = w; canvas.height = h;
+
+          ctx.fillStyle = '#FFFFFF';
+          ctx.fillRect(0, 0, w, h);
+          ctx.drawImage(img, 0, 0, w, h);
+
+          let low = 0.05, high = 0.95, bestBlob = null;
+          for (let i = 0; i < 7; i++) {
+            let mid = (low + high) / 2;
+            let blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', mid));
+            if (blob.size <= targetBytes) { bestBlob = blob; low = mid; } else { high = mid; }
+          }
+
+          if (!bestBlob) {
+            canvas.width = Math.round(w * 0.7);
+            canvas.height = Math.round(h * 0.7);
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            bestBlob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.5));
+          }
+
+          finishResult(bestBlob, canvas.width + " x " + canvas.height + " px", "jpg");
+          resolve();
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function finishResult(blob, meta, ext) {
+    optimizedBlob = blob;
+    const kb = (blob.size / 1024).toFixed(1);
+    const mb = (blob.size / (1024 * 1024)).toFixed(2);
+    const display = blob.size > 1048576 ? mb + " MB" : kb + " KB";
+
+    document.getElementById('resMeta').innerText = "Meta: " + meta;
+    document.getElementById('resFinalSize').innerText = "Final: " + display;
+
+    optimizedUrl = URL.createObjectURL(blob);
+    const dl = document.getElementById('downloadBtn');
+    dl.href = optimizedUrl;
+    dl.download = "optimized_file." + ext;
+    resultCard.style.display = 'flex';
+  }
+
+  // 1-Click Print (Triggers direct printer dialog without opening another tab)
+  function printOptimizedFile() {
+    if (!optimizedUrl) return;
+    const printFrame = document.getElementById('printFrame');
+    printFrame.src = optimizedUrl;
+    printFrame.onload = function() {
+      setTimeout(() => {
+        printFrame.contentWindow.focus();
+        printFrame.contentWindow.print();
+      }, 300);
+    };
+  }
+
+  // --- PROMPT REGISTRY (Includes Combo & Both-Side Instructions) ---
+  const prompts = {
+    ComboCleanDeskew: "Perform both deskew straightening and document cleaning on this image: 1) Straighten (deskew) any tilted angles and crop tightly to 90-degree square corners. 2) Remove all background shadows, scanner noise, and stains. Flatten the entire paper background to clean pure white (#FFFFFF). STRICT REQUIREMENT: DO NOT alter, spell-check, rewrite, or hallucinate ANY existing printed text, handwriting, numbers, or official signatures. Preserve 100% of all original characters completely intact and exact.",
+    
+    BothSideID: "Merge and format both Front and Back sides of this official ID / card (Aadhaar / Voter / License) onto a single clean page ready for print: 1) Align the Front side and Back side side-by-side with uniform spacing. 2) Maintain standard CR80 card proportions (85.6mm x 54mm each) and preserve clear rounded card borders. 3) Flatten background to clean pure white (#FFFFFF), remove camera glare and shadows. CRITICAL: DO NOT alter, change, blur, or modify ANY card details, names, numbers, dates of birth, QR codes, or signatures.",
+    
+    FullCardEnhance: "Deskew, straighten, and enhance this PVC ID card photo: 1) Correct perspective tilt and align horizontally. 2) Remove camera flash glare, scratches, and background noise. 3) Maintain standard CR80 (85.6mm x 54mm) card aspect ratio. CRITICAL: Strictly preserve all card text, names, ID numbers, dates, QR codes, logos, and signatures with zero modifications.",
+    
+    RemoveFoldsFaint: "Process and restore this scanned document: 1) Digitally remove fold creases, staple shadow lines, and dog-eared paper texture. 2) Boost and darken faint pencil marks, faded ink signatures, and blurred rubber seals without washing them out. 3) Keep background clean paper-white while ensuring every faded letter and number remains 100% legible and untouched.",
+    
+    CleanSignature: "Process this scanned customer signature for government portal upload: eliminate grey paper background to pure transparent/clean white (#FFFFFF). Darken ink strokes to deep jet black (#000000) with crisp edges. Do not clip thin pen loops or alter signature geometry.",
+    
+    FixWhatsAppPhoto: "Restore and upscale this heavily compressed, low-resolution WhatsApp/mobile image for high-resolution photo printing: remove digital JPEG compression artifacts, pixelation blocks, and camera noise. Reconstruct crisp, sharp eye pupils, eyelashes, hairline, and facial contours while keeping the person's true likeness and natural skin texture intact. Maintain standard 35mm x 45mm passport proportions.",
+    
+    PassportBG: "Enhance and prepare this portrait for passport submission: 1) Sharpen facial features, balance skin tones naturally without artificial smoothing, remove minor blemishes. 2) Replace existing background with smooth, solid studio off-white (#F5F5F5) or light blue with soft, natural feathering around hair and shoulders. Keep clothes and facial identity 100% unchanged.",
+    
+    RestoreOld: "Restore this photograph: repair scratches, cracks, fold lines, and dust spots. Sharpen soft details and enhance contrast while strictly preserving authentic facial identity and features.",
+    
+    ColorizePhoto: "Colorize this vintage black-and-white photograph with natural, realistic skin tones, fabric colors, and balanced background tones."
+  };
+
+  function copyPrompt(key) {
+    const text = prompts[key];
+    if (!text) return;
+
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(() => triggerToast(key)).catch(() => fallbackCopy(text, key));
+    } else {
+      fallbackCopy(text, key);
+    }
+  }
+
+  function fallbackCopy(text, key) {
+    const tempTextArea = document.createElement("textarea");
+    tempTextArea.value = text;
+    tempTextArea.style.position = "fixed";
+    tempTextArea.style.opacity = "0";
+    document.body.appendChild(tempTextArea);
+    tempTextArea.select();
+    try {
+      document.execCommand("copy");
+      triggerToast(key);
+    } catch (e) {
+      alert("Copied manually.");
+    }
+    document.body.removeChild(tempTextArea);
+  }
+
+  function triggerToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.innerText = msg.startsWith("Image") || msg.startsWith("✓") ? msg : "✓ Copied prompt: " + msg + "! Paste in Gemini.";
+    toast.style.display = 'block';
+    setTimeout(() => { toast.style.display = 'none'; }, 2200);
+  }
+
+  // Keyboard Shortcuts (1 to 9)
+  const keyMap = {
+    '1': 'ComboCleanDeskew',
+    '2': 'BothSideID',
+    '3': 'FullCardEnhance',
+    '4': 'RemoveFoldsFaint',
+    '5': 'CleanSignature',
+    '6': 'FixWhatsAppPhoto',
+    '7': 'PassportBG',
+    '8': 'RestoreOld',
+    '9': 'ColorizePhoto'
+  };
+
+  window.addEventListener('keydown', (e) => {
+    if (['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+    if (keyMap[e.key]) {
+      e.preventDefault();
+      copyPrompt(keyMap[e.key]);
+    }
+  });
+</script>
+
+</body>
+</html>
